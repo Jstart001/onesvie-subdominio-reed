@@ -11,15 +11,15 @@
   {% endif %}
   <meta name="author" content="ONESVIE - Oficina Nacional de Evaluación Sísmica y Vulnerabilidad de Infraestructura y Edificaciones">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="{{ title }} | Portal de Capacitación - ONESVIE">
+  <meta property="og:title" content="{{ title }} | ONESVIE">
   {% if description %}
   <meta property="og:description" content="{{ description }}">
   {% endif %}
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reed.onesvie.edu.do{{ page.url }}">
-  <meta property="og:image" content="{{ '/img/og-image.jpg' | url }}">
+  <meta property="og:image" content="{{ '/img/LOGO_FAVICON01.jpg' | url }}">
   <link rel="canonical" href="https://reed.onesvie.edu.do{{ page.url }}">
-  <title>{{ title }} | Portal de Capacitación - ONESVIE</title>
+  <title>{{ title }} | ONESVIE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -28,6 +28,8 @@
   <link rel="icon" type="image/x-icon" href="{{ '/img/favicon.ico' | url }}">
 </head>
 <body>
+
+  {% include 'barra-gobierno.njk' %}
 
   {% include 'header.njk' %}
 
