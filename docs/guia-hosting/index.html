@@ -1,0 +1,323 @@
+<h1>Guía de Implementación en Hosting</h1>
+<h2>Portal de Capacitación ONESVIE</h2>
+<p>Esta guía detalla los pasos para implementar el portal tanto en su versión estática (HTML/CSS/JS) como en WordPress, en un servidor de hosting.</p>
+<hr>
+<h2>1. Implementación Estática (HTML/CSS/JS)</h2>
+<h3>1.1 Requisitos del Servidor</h3>
+<ul>
+<li><strong>Tipo</strong>: Cualquier servidor web (Apache, Nginx, IIS).</li>
+<li><strong>SSL</strong>: Certificado SSL obligatorio (HTTPS).</li>
+<li><strong>Almacenamiento</strong>: Mínimo 1 GB (el portal estático pesa menos de 5 MB).</li>
+<li><strong>Ancho de banda</strong>: Según tráfico estimado (5 GB/mes suficiente para inicio).</li>
+</ul>
+<h3>1.2 Configuración del Subdominio</h3>
+<h4>Opción A: Panel cPanel</h4>
+<ol>
+<li>Acceder a <strong>cPanel</strong> del dominio <code>onesvie.gob.do</code>.</li>
+<li>Ir a <strong>Subdominios</strong>.</li>
+<li>Crear subdominio: <code>capacitacion</code>.</li>
+<li>Directorio raíz: <code>public_html/capacitacion</code>.</li>
+<li>El subdominio estará disponible en <code>https://capacitacion.onesvie.gob.do</code>.</li>
+</ol>
+<h4>Opción B: Configuración DNS Manual</h4>
+<ol>
+<li>Agregar registro DNS tipo <strong>A</strong> o <strong>CNAME</strong>:
+<ul>
+<li><strong>Nombre</strong>: <code>capacitacion.onesvie.gob.do</code></li>
+<li><strong>Valor</strong>: IP del servidor o alias del dominio principal.</li>
+</ul>
+</li>
+<li>Configurar el virtual host en Apache/Nginx para apuntar al directorio del portal.</li>
+</ol>
+<h3>1.3 Subida de Archivos</h3>
+<h4>Vía FTP/SFTP (FileZilla recomendado)</h4>
+<ol>
+<li>Conectar al servidor con las credenciales FTP.</li>
+<li>Navegar al directorio raíz del subdominio (<code>public_html/capacitacion</code>).</li>
+<li>Subir todos los archivos del proyecto:</li>
+</ol>
+<pre><code>capacitacion/
+├── index.html
+├── css/
+│   └── styles.css
+├── js/
+│   └── script.js
+├── img/
+│   ├── logo-onesvie.png
+│   └── favicon.ico
+├── pages/
+│   ├── sobre-iniciativa.html
+│   ├── oferta-academica.html
+│   ├── inscripcion.html
+│   ├── noticias.html
+│   └── contacto.html
+└── docs/
+    ├── guia-wordpress.md
+    └── guia-hosting.md
+</code></pre>
+<h4>Vía cPanel File Manager</h4>
+<ol>
+<li>Acceder a <strong>Administrador de Archivos</strong> en cPanel.</li>
+<li>Navegar al directorio del subdominio.</li>
+<li>Usar la función <strong>Cargar</strong> para subir un archivo ZIP con todo el proyecto.</li>
+<li>Extraer el archivo ZIP en el servidor.</li>
+</ol>
+<h3>1.4 Configuración de SSL</h3>
+<ol>
+<li>En cPanel, ir a <strong>SSL/TLS Status</strong>.</li>
+<li>Verificar que el subdominio <code>capacitacion.onesvie.gob.do</code> tenga un certificado activo.</li>
+<li>Si no tiene, ejecutar <strong>AutoSSL</strong> o solicitar un certificado Let's Encrypt.</li>
+<li>Forzar HTTPS mediante <code>.htaccess</code>:</li>
+</ol>
+<pre><code class="language-apache">RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</code></pre>
+<h3>1.5 Verificación</h3>
+<ol>
+<li>Acceder a <code>https://capacitacion.onesvie.gob.do</code>.</li>
+<li>Verificar que todas las páginas carguen correctamente.</li>
+<li>Verificar que los enlaces entre páginas funcionen.</li>
+<li>Verificar la versión móvil (responsive).</li>
+<li>Verificar que HTTPS esté activo (candado verde).</li>
+</ol>
+<hr>
+<h2>2. Implementación WordPress</h2>
+<h3>2.1 Requisitos del Servidor</h3>
+<ul>
+<li><strong>PHP</strong>: Versión 8.0 o superior.</li>
+<li><strong>MySQL/MariaDB</strong>: Versión 5.7+ o 10.3+.</li>
+<li><strong>Almacenamiento</strong>: Mínimo 5 GB.</li>
+<li><strong>Memoria PHP</strong>: Mínimo 256 MB.</li>
+<li><strong>SSL</strong>: Obligatorio.</li>
+</ul>
+<h3>2.2 Instalación de WordPress</h3>
+<h4>Vía cPanel (Softaculous)</h4>
+<ol>
+<li>Acceder a <strong>cPanel</strong> &gt; <strong>Softaculous Apps Installer</strong>.</li>
+<li>Seleccionar <strong>WordPress</strong>.</li>
+<li>Configurar:
+<ul>
+<li><strong>Dominio</strong>: <code>capacitacion.onesvie.gob.do</code>.</li>
+<li><strong>Directorio de instalación</strong>: Dejar vacío (instalar en raíz).</li>
+<li><strong>Título del sitio</strong>: Portal de Capacitación - ONESVIE.</li>
+<li><strong>Usuario administrador</strong>: Crear usuario seguro.</li>
+<li><strong>Contraseña</strong>: Generar contraseña fuerte.</li>
+<li><strong>Correo</strong>: <code>capacitacion@onesvie.gob.do</code>.</li>
+</ul>
+</li>
+<li>Hacer clic en <strong>Instalar</strong>.</li>
+</ol>
+<h4>Instalación Manual</h4>
+<ol>
+<li>Descargar WordPress desde <code>wordpress.org</code>.</li>
+<li>Subir archivos al directorio del subdominio vía FTP.</li>
+<li>Crear base de datos en cPanel &gt; <strong>MySQL Databases</strong>.</li>
+<li>Acceder a <code>https://capacitacion.onesvie.gob.do</code> y seguir el asistente de instalación.</li>
+</ol>
+<h3>2.3 Configuración Post-Instalación</h3>
+<ol>
+<li><strong>Idioma</strong>: Configurar español como idioma por defecto.</li>
+<li><strong>Enlaces permanentes</strong>: <strong>Ajustes</strong> &gt; <strong>Enlaces permanentes</strong> &gt; <strong>Nombre de la entrada</strong> (<code>/%postname%/</code>).</li>
+<li><strong>Zona horaria</strong>: <strong>Ajustes</strong> &gt; <strong>Generales</strong> &gt; <strong>America/Santo_Domingo</strong>.</li>
+<li><strong>Visibilidad en buscadores</strong>: Desmarcar &quot;Disuadir a los motores de búsqueda&quot; (una vez el sitio esté listo).</li>
+</ol>
+<h3>2.4 Instalación del Tema y Plugins</h3>
+<ol>
+<li>Instalar <strong>GeneratePress</strong> o <strong>Astra</strong> (ver guía WordPress).</li>
+<li>Instalar plugins recomendados:
+<ul>
+<li>Contact Form 7 / WPForms Lite</li>
+<li>Wordfence Security</li>
+<li>WP Super Cache / LiteSpeed Cache</li>
+<li>Yoast SEO / Rank Math</li>
+<li>Custom Post Type UI</li>
+<li>Advanced Custom Fields (ACF)</li>
+<li>UpdraftPlus</li>
+</ul>
+</li>
+</ol>
+<h3>2.5 Migración del Contenido</h3>
+<p>Seguir los pasos detallados en <code>docs/guia-wordpress.md</code>.</p>
+<hr>
+<h2>3. Configuración de Correo Electrónico</h2>
+<h3>3.1 Crear Cuentas de Correo</h3>
+<p>En cPanel &gt; <strong>Cuentas de Correo Electrónico</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Cuenta</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>capacitacion@onesvie.gob.do</code></td>
+<td>Formularios de inscripción</td>
+</tr>
+<tr>
+<td><code>info@onesvie.gob.do</code></td>
+<td>Consultas generales</td>
+</tr>
+</tbody>
+</table>
+<h3>3.2 Configurar Formularios</h3>
+<ul>
+<li><strong>Versión estática</strong>: Los formularios requieren integración con un servicio externo (Google Forms, Formspree, PHP backend).</li>
+<li><strong>Versión WordPress</strong>: Usar Contact Form 7 o WPForms configurados para enviar a <code>capacitacion@onesvie.gob.do</code>.</li>
+</ul>
+<h3>3.3 Integración con Google Forms (Alternativa para versión estática)</h3>
+<ol>
+<li>Crear formulario en Google Forms.</li>
+<li>Obtener el código de inserción (iframe).</li>
+<li>Reemplazar el formulario HTML en <code>pages/inscripcion.html</code> con el iframe de Google Forms.</li>
+<li>Las respuestas se almacenan automáticamente en Google Sheets.</li>
+</ol>
+<hr>
+<h2>4. Optimización de Rendimiento</h2>
+<h3>4.1 Compresión Gzip</h3>
+<p>Agregar al <code>.htaccess</code>:</p>
+<pre><code class="language-apache">&lt;IfModule mod_deflate.c&gt;
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+&lt;/IfModule&gt;
+</code></pre>
+<h3>4.2 Caché del Navegador</h3>
+<pre><code class="language-apache">&lt;IfModule mod_expires.c&gt;
+    ExpiresActive On
+    ExpiresByType text/css &quot;access plus 1 month&quot;
+    ExpiresByType application/javascript &quot;access plus 1 month&quot;
+    ExpiresByType image/png &quot;access plus 1 year&quot;
+    ExpiresByType image/jpeg &quot;access plus 1 year&quot;
+    ExpiresByType image/svg+xml &quot;access plus 1 year&quot;
+    ExpiresByType image/x-icon &quot;access plus 1 year&quot;
+&lt;/IfModule&gt;
+</code></pre>
+<h3>4.3 Optimización de Imágenes</h3>
+<ul>
+<li>Convertir imágenes a formato <strong>WebP</strong> cuando sea posible.</li>
+<li>Comprimir PNG/JPG antes de subir (TinyPNG, Squoosh).</li>
+<li>El logo debe estar optimizado (recomendado: PNG &lt; 100 KB).</li>
+</ul>
+<hr>
+<h2>5. Seguridad</h2>
+<h3>5.1 Medidas Básicas</h3>
+<ul>
+<li>Certificado SSL activo (HTTPS obligatorio).</li>
+<li>Contraseñas fuertes para todos los accesos.</li>
+<li>Actualizaciones regulares (sistema, plugins, tema).</li>
+<li>Copias de seguridad periódicas.</li>
+</ul>
+<h3>5.2 Versión WordPress Adicional</h3>
+<ul>
+<li>Cambiar la URL de acceso a <code>wp-admin</code> (plugin WPS Hide Login).</li>
+<li>Limitar intentos de inicio de sesión.</li>
+<li>Deshabilitar la edición de archivos desde el panel.</li>
+<li>Agregar al <code>wp-config.php</code>:</li>
+</ul>
+<pre><code class="language-php">define('DISALLOW_FILE_EDIT', true);
+define('WP_AUTO_UPDATE_CORE', 'minor');
+</code></pre>
+<h3>5.3 Archivo .htaccess de Seguridad</h3>
+<pre><code class="language-apache"># Proteger wp-config.php
+&lt;Files wp-config.php&gt;
+    order allow,deny
+    deny from all
+&lt;/Files&gt;
+
+# Deshabilitar listado de directorios
+Options -Indexes
+
+# Proteger archivo .htaccess
+&lt;Files .htaccess&gt;
+    order allow,deny
+    deny from all
+&lt;/Files&gt;
+</code></pre>
+<hr>
+<h2>6. DNS y Dominio</h2>
+<h3>6.1 Configuración DNS para Subdominio</h3>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Nombre</th>
+<th>Valor</th>
+<th>TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><code>capacitacion</code></td>
+<td>IP del servidor</td>
+<td>3600</td>
+</tr>
+<tr>
+<td>CAA</td>
+<td><code>capacitacion</code></td>
+<td><code>0 issue &quot;letsencrypt.org&quot;</code></td>
+<td>3600</td>
+</tr>
+</tbody>
+</table>
+<h3>6.2 Verificación de Propagación</h3>
+<ul>
+<li>Usar <code>whatsmydns.net</code> para verificar la propagación DNS.</li>
+<li>La propagación puede tardar entre 1 y 24 horas.</li>
+</ul>
+<hr>
+<h2>7. Monitoreo y Analítica</h2>
+<h3>7.1 Google Analytics</h3>
+<ol>
+<li>Crear cuenta en Google Analytics.</li>
+<li>Obtener el ID de seguimiento (G-XXXXXXXXXX).</li>
+<li>Agregar el script de seguimiento en el <code>&lt;head&gt;</code> de todas las páginas.</li>
+</ol>
+<h3>7.2 Google Search Console</h3>
+<ol>
+<li>Registrar el subdominio en Search Console.</li>
+<li>Verificar la propiedad (vía archivo HTML o DNS).</li>
+<li>Enviar el sitemap XML.</li>
+</ol>
+<h3>7.3 Monitoreo de Uptime</h3>
+<ul>
+<li>Usar <strong>UptimeRobot</strong> (gratuito) para monitorear disponibilidad.</li>
+<li>Configurar alertas por correo en caso de caída del servicio.</li>
+</ul>
+<hr>
+<h2>8. Checklist de Lanzamiento</h2>
+<ul>
+<li>[ ] Subdominio configurado y propagado.</li>
+<li>[ ] Certificado SSL activo.</li>
+<li>[ ] Archivos subidos al servidor.</li>
+<li>[ ] Todas las páginas cargando correctamente.</li>
+<li>[ ] Formularios funcionando.</li>
+<li>[ ] Correos de notificación configurados.</li>
+<li>[ ] Responsive verificado en móvil y tablet.</li>
+<li>[ ] Velocidad de carga verificada (PageSpeed Insights).</li>
+<li>[ ] Google Analytics instalado.</li>
+<li>[ ] Google Search Console configurado.</li>
+<li>[ ] Copia de seguridad configurada.</li>
+<li>[ ] Seguridad revisada (firewall, SSL, contraseñas).</li>
+<li>[ ] Enlace a onesvie.gob.do verificado.</li>
+<li>[ ] Barra gubernamental visible.</li>
+<li>[ ] Footer con datos institucionales correctos.</li>
+</ul>
+<hr>
+<h2>9. Proveedores de Hosting Recomendados (para Gobierno Dominicano)</h2>
+<p>Dado que se trata de un subdominio gubernamental <code>.gob.do</code>, el hosting debe ser gestionado por la <strong>OGTIC</strong> (Oficina Gubernamental de Tecnologías de la Información y Comunicaciones) o el proveedor autorizado por el Estado dominicano.</p>
+<p>Contactar:</p>
+<ul>
+<li><strong>OGTIC</strong>: (809) 286-1009</li>
+<li><strong>Correo</strong>: info@ogtic.gob.do</li>
+<li><strong>Dirección</strong>: Av. 27 de Febrero #419 casi esquina Núñez de Cáceres, Santo Domingo, R.D.</li>
+</ul>
+<hr>
+<h2>Notas Finales</h2>
+<ul>
+<li>Esta guía es compatible con los estándares del Sistema de Diseño Dominicano.</li>
+<li>No se requieren servicios de pago adicionales.</li>
+<li>El portal estático puede implementarse en cualquier servidor web básico.</li>
+<li>WordPress requiere un servidor con soporte PHP/MySQL.</li>
+<li>Toda la configuración de seguridad debe ser coordinada con el equipo de TI de la institución.</li>
+</ul>
